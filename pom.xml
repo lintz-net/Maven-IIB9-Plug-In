@@ -15,7 +15,7 @@
 		<dependency>
 			<groupId>com.ibm.broker</groupId>
 			<artifactId>IntegrationAPI</artifactId>
-			<version>10.0.0.6</version>
+			<version>10.0.0.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven</groupId>

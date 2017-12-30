@@ -63,7 +63,7 @@ public class MavenizeMojo extends AbstractMojo {
     /**
      * mqsiprofile path
      */
-    @Parameter(property = "mqsiprofile", required = false, defaultValue = "C:\\Program Files\\IBM\\IIB\\10.0.0.6\\server\\bin\\mqsiprofile.cmd")
+    @Parameter(property = "mqsiprofile", required = false, defaultValue = "C:\\Program Files\\IBM\\IIB\\10.0.0.8\\server\\bin\\mqsiprofile.cmd")
     protected String mqsiprofile;
     /**
      * The path of the workspace in which the projects are to be sought.

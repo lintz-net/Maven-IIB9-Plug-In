@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.maven.plugin.MojoFailureException;
@@ -170,11 +171,21 @@ public class EclipseProjectUtils {
      * @return the unmarshalled .profile file
      * @throws JAXBException if something goes wrong
      */
-    protected static ProjectDescription unmarshallEclipseProjectFile(File projectFile)
+    public static ProjectDescription unmarshallEclipseProjectFile(File projectFile)
             throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(ProjectDescription.class);
         Unmarshaller unmarshaller = context.createUnmarshaller();
         return (ProjectDescription) unmarshaller.unmarshal(projectFile);
+
+    }
+
+    public static void marshallEclipseProjectFile(ProjectDescription projectDescription, File projectFile)
+            throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(ProjectDescription.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(javax.xml.bind.Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        marshaller.marshal(projectDescription, projectFile);
 
     }
 

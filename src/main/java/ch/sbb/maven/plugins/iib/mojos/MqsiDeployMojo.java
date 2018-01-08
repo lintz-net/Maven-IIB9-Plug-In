@@ -101,6 +101,7 @@ public class MqsiDeployMojo extends AbstractMojo {
     }
 
 
+    @Override
     public void execute() throws MojoFailureException, MojoExecutionException {
 
         if (new SkipUtil().isSkip(this.getClass())) {
@@ -223,7 +224,7 @@ public class MqsiDeployMojo extends AbstractMojo {
         else
         {
             String ipAddress = getProperty("ipAddress", deployConfigProperties);
-            String port = getProperty("ipAddress", deployConfigProperties);
+            String port = getProperty("port", deployConfigProperties);
             String qMgr = getProperty("qMgr", deployConfigProperties);
             addParamFor(ipAddress, "-i", params);
             addParamFor(port, "-p", params);

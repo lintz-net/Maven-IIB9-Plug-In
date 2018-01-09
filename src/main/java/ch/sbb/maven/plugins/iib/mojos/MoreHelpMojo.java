@@ -35,7 +35,7 @@ public class MoreHelpMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        String root = session.getExecutionRootDirectory();
+        String root = System.getProperty("user.home");
         File workspace = new File(root + File.separator + "morehelp");
         workspace.mkdir();
 

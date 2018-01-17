@@ -3,8 +3,6 @@ package ch.sbb.maven.plugins.iib.mojos;
 import java.io.File;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -14,13 +12,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
-import com.syntegrity.iib.BuildCommandType;
-import com.syntegrity.iib.NatureType;
-
-import ch.sbb.maven.plugins.iib.generated.eclipse_project.ProjectDescription;
 import ch.sbb.maven.plugins.iib.utils.ConfigurationValidator;
 import ch.sbb.maven.plugins.iib.utils.DirectoriesUtil;
-import ch.sbb.maven.plugins.iib.utils.EclipseProjectUtils;
 import ch.sbb.maven.plugins.iib.utils.SkipUtil;
 
 /**
@@ -67,69 +60,8 @@ public class InitializeBarBuildWorkspaceMojo extends AbstractMojo {
 
         performInitialDeletes();
 
-        performFixNatures(new File(project.getBasedir(), ".project"));
+        ConfigurationValidator.validadeAndFixConfigurationNatureOfProject(new File(project.getBasedir(), ".project"));
 
-    }
-
-    /**
-     * @param projectDirectory
-     * @throws MojoFailureException
-     * 
-     */
-    private void performFixNatures(File projectDirectory) throws MojoFailureException {
-        try {
-
-            ProjectDescription project = EclipseProjectUtils.unmarshallEclipseProjectFile(projectDirectory);
-            List<String> natureList = project.getNatures().getNature();
-
-            if ((natureList.contains(NatureType.APPLICATION.getFullName()) ||
-                    natureList.contains(NatureType.BARFILES.getFullName()) ||
-                    natureList.contains(NatureType.LIBRARY.getFullName()) ||
-                    natureList.contains(NatureType.SHAREDLIBRARY.getFullName())) &&
-                    (natureList.contains(NatureType.JAVA.getFullName()))) {
-
-                project.getNatures().getNature().remove(NatureType.JAVA.getFullName());
-
-                {
-                    Integer index = getIndexBuildCommand(project, BuildCommandType.ECLIPSE_JAVA_BUILDER.getFullName());
-                    if (index != null) {
-                        project.getBuildSpec()
-                                .getBuildCommand()
-                                .remove(index.intValue());
-                    }
-                }
-
-                {
-                    Integer index = getIndexBuildCommand(project, BuildCommandType.IBM_JAVA_BUILDER.getFullName());
-                    if (index != null) {
-                        project.getBuildSpec()
-                                .getBuildCommand()
-                                .remove(index.intValue());
-                    }
-                }
-
-                EclipseProjectUtils.marshallEclipseProjectFile(project, projectDirectory);
-            }
-
-        } catch (JAXBException e) {
-            throw (new MojoFailureException(
-                    "Error parsing .project file in: " + projectDirectory.getPath(), e));
-        }
-    }
-
-
-    /**
-     * @param fullName
-     * @return
-     */
-    private Integer getIndexBuildCommand(ProjectDescription project, String fullName) {
-        for (int index = 0; index <= project.getBuildSpec().getBuildCommand().size(); index++) {
-            String command = project.getBuildSpec().getBuildCommand().get(index).getName();
-            if (command.equalsIgnoreCase(fullName)) {
-                return index;
-            }
-        }
-        return null;
     }
 
     private void attemptToDelete(String expression) {

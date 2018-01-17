@@ -1,17 +1,24 @@
 package ch.sbb.maven.plugins.iib.utils;
 
 import java.io.File;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
+import com.syntegrity.iib.BuildCommandType;
+import com.syntegrity.iib.NatureType;
+
+import ch.sbb.maven.plugins.iib.generated.eclipse_project.ProjectDescription;
+
 public class ConfigurationValidator extends AbstractValidator {
 
 
-    public static void validateUnpackIibDependenciesIntoWorkspace(Boolean unpackIibDependenciesIntoWorkspace, Log log) throws MojoFailureException
-    {
+    public static void validateUnpackIibDependenciesIntoWorkspace(Boolean unpackIibDependenciesIntoWorkspace, Log log) throws MojoFailureException {
         if (unpackIibDependenciesIntoWorkspace != null) {
             return;
         }
@@ -27,8 +34,7 @@ public class ConfigurationValidator extends AbstractValidator {
         String exampleTagString2 = getExampleTagString(tagName, exampleText2);
         logErrorExample(log, new String[] { exampleTagString1, "OR", exampleTagString2 });
 
-        String[] instructions = new String[]
-        {
+        String[] instructions = new String[] {
                 "When set to true, the plugin will attempt to download and unzip the dependent projects into",
                 "workspace directory.  For example, the HDR project might have a dependency defined like:",
                 "\n",
@@ -64,10 +70,8 @@ public class ConfigurationValidator extends AbstractValidator {
      * @return create or package or throws exception is not defined
      * @throws MojoFailureException
      */
-    public static String validateCreateOrPackageBar(String createOrPackageBar, Log log) throws MojoFailureException
-    {
-        if (createOrPackageBar != null && !createOrPackageBar.trim().isEmpty())
-        {
+    public static String validateCreateOrPackageBar(String createOrPackageBar, Log log) throws MojoFailureException {
+        if (createOrPackageBar != null && !createOrPackageBar.trim().isEmpty()) {
             if (createOrPackageBar.trim().equalsIgnoreCase("create")
                     || createOrPackageBar.trim().equalsIgnoreCase("createbar")) {
                 return "create";
@@ -89,8 +93,7 @@ public class ConfigurationValidator extends AbstractValidator {
         String exampleTagString2 = getExampleTagString(tagName, exampleText2);
         logErrorExample(log, new String[] { exampleTagString1, "OR", exampleTagString2 });
 
-        String[] instructions = new String[]
-        {
+        String[] instructions = new String[] {
                 "The 'createOrPackageBar' configuration value tells the plugin whether to ",
                 "execute mqsiCreateBar which compiles messages flows or to",
                 "execute packageBar which does not compile message flows.",
@@ -107,10 +110,8 @@ public class ConfigurationValidator extends AbstractValidator {
     }
 
 
-    public static void validatePathToMqsiProfileScript(String pathToMqsiProfileScript, Log log) throws MojoFailureException
-    {
-        if (pathToMqsiProfileScript == null || pathToMqsiProfileScript.trim().equals(""))
-        {
+    public static void validatePathToMqsiProfileScript(String pathToMqsiProfileScript, Log log) throws MojoFailureException {
+        if (pathToMqsiProfileScript == null || pathToMqsiProfileScript.trim().equals("")) {
             logErrorStart(log);
             String[] messages = { getArgumentMissingString("pathToMqsiProfileScript") };
             logErrorBaseProblem(log, messages);
@@ -118,8 +119,7 @@ public class ConfigurationValidator extends AbstractValidator {
             String exampleText1 = "C:\\Program Files\\IBM\\MQSI\\9.0.0.2\\bin\\mqsiprofile.cmd";
             String exampleTagString1 = getExampleTagString(tagName, exampleText1);
             logErrorExample(log, new String[] { exampleTagString1 });
-            String[] instructions = new String[]
-            {
+            String[] instructions = new String[] {
                     "The 'pathToMqsiProfileScript' configuration value tells the plugin where to ",
                     "execute the mqsiprofile command or shell script.  It is necessary to execute",
                     "this command prior to executing mqsicreatebar..."
@@ -129,8 +129,7 @@ public class ConfigurationValidator extends AbstractValidator {
             throw new MojoFailureException(getArgumentMissingString("copyDependentJarsLocation"));
         }
         File file = new File(pathToMqsiProfileScript);
-        if (!file.exists())
-        {
+        if (!file.exists()) {
             logErrorStart(log);
             String[] messages = { getFileMissingString("pathToMqsiProfileScript", pathToMqsiProfileScript) };
             logErrorBaseProblem(log, messages);
@@ -138,8 +137,7 @@ public class ConfigurationValidator extends AbstractValidator {
             String exampleText1 = "C:\\Program Files\\IBM\\MQSI\\9.0.0.2\\bin\\mqsiprofile.cmd";
             String exampleTagString1 = getExampleTagString(tagName, exampleText1);
             logErrorExample(log, new String[] { exampleTagString1 });
-            String[] instructions = new String[]
-            {
+            String[] instructions = new String[] {
                     "The 'pathToMqsiProfileScript' configuration value tells the plugin where to ",
                     "execute the mqsiprofile command or shell script. "
             };
@@ -150,10 +148,8 @@ public class ConfigurationValidator extends AbstractValidator {
 
     }
 
-    public static void validateUseClassloaders(Boolean useClassloaders, Log log) throws MojoFailureException
-    {
-        if (useClassloaders == null)
-        {
+    public static void validateUseClassloaders(Boolean useClassloaders, Log log) throws MojoFailureException {
+        if (useClassloaders == null) {
             logErrorStart(log);
             String[] messages = { getArgumentMissingString("useClassloaders") };
             logErrorBaseProblem(log, messages);
@@ -179,10 +175,8 @@ public class ConfigurationValidator extends AbstractValidator {
         }
     }
 
-    public static void validateWorkspace(File workspace, Log log) throws MojoFailureException
-    {
-        if (workspace == null)
-        {
+    public static void validateWorkspace(File workspace, Log log) throws MojoFailureException {
+        if (workspace == null) {
             logErrorStart(log);
             String[] messages = { getArgumentMissingString("workspace") };
             logErrorBaseProblem(log, messages);
@@ -202,10 +196,8 @@ public class ConfigurationValidator extends AbstractValidator {
      * @param unpackIibDependencyTypes
      * @param log
      */
-    public static void validateUnpackIibDependencyTypes(String unpackIibDependencyTypes, Log log)
-    {
-        if (unpackIibDependencyTypes == null || unpackIibDependencyTypes.trim().isEmpty())
-        {
+    public static void validateUnpackIibDependencyTypes(String unpackIibDependencyTypes, Log log) {
+        if (unpackIibDependencyTypes == null || unpackIibDependencyTypes.trim().isEmpty()) {
             logWarnStart(log);
             String[] messages = new String[] {
                     "The unpackIibDependencyTypes configuration is not defined",
@@ -221,8 +213,7 @@ public class ConfigurationValidator extends AbstractValidator {
             logWarnFinish(log);
         }
 
-        else if (unpackIibDependencyTypes != null && unpackIibDependencyTypes.toLowerCase().contains("jar"))
-        {
+        else if (unpackIibDependencyTypes != null && unpackIibDependencyTypes.toLowerCase().contains("jar")) {
             logWarnStart(log);
             String[] messages = new String[] {
                     "The unpackIibDependencyTypes configuration contains the word 'jar'",
@@ -241,8 +232,7 @@ public class ConfigurationValidator extends AbstractValidator {
     }
 
 
-    public static void validateCopyDependentJarsLocation(String copyDependentJarsLocation, Log log) throws MojoFailureException
-    {
+    public static void validateCopyDependentJarsLocation(String copyDependentJarsLocation, Log log) throws MojoFailureException {
         if (copyDependentJarsLocation != null) {
             return;
         }
@@ -258,8 +248,7 @@ public class ConfigurationValidator extends AbstractValidator {
         String exampleTagString2 = getExampleTagString(tagName, exampleText2);
         logErrorExample(log, new String[] { exampleTagString1, "OR", exampleTagString2 });
 
-        String[] instructions = new String[]
-        {
+        String[] instructions = new String[] {
                 "The 'copyDependentJarsLocation' configuration value tells the plugin where to download",
                 "and copy dependent java archives. Only jars with compile scope will be downloaded. ",
                 "For example, the project might have a dependency defined like:",
@@ -294,8 +283,7 @@ public class ConfigurationValidator extends AbstractValidator {
     public static void warnOnApplyBarOverrides(String projectBaseDir, File resourceDirectory, Log log, String warning) {
         logWarnStart(log);
         logWarnBaseProblem(log, new String[] { warning });
-        String[] instructions = new String[]
-        {
+        String[] instructions = new String[] {
                 "The iib9 maven plugin's process-classes goal executes the applybaroverrides command using the generated bar file",
                 "",
                 "Here's how it works:",
@@ -317,11 +305,9 @@ public class ConfigurationValidator extends AbstractValidator {
         logWarnFinish(log);
     }
 
-    public static void validateDeployBarMojo(MavenProject project, Log log) throws MojoFailureException
-    {
+    public static void validateDeployBarMojo(MavenProject project, Log log) throws MojoFailureException {
         ArtifactRepository repo = project.getDistributionManagementArtifactRepository();
-        if (repo == null)
-        {
+        if (repo == null) {
 
 
             logErrorStart(log);
@@ -367,8 +353,7 @@ public class ConfigurationValidator extends AbstractValidator {
         boolean isSnapshotUrl = repo.getUrl().toLowerCase().contains("snapshot");
         boolean isReleaseUrl = repo.getUrl().toLowerCase().contains("release");
 
-        if (isSnapshot && isReleaseUrl)
-        {
+        if (isSnapshot && isReleaseUrl) {
             String[] messages = new String[] {
                     "possible mismatch between snapshot version and release Url",
                     "Your Version " + project.getVersion() + " appears to be in conflict with the url " + repo.getUrl()
@@ -379,8 +364,7 @@ public class ConfigurationValidator extends AbstractValidator {
 
             logWarnFinish(log);
         }
-        if (!isSnapshot && isSnapshotUrl)
-        {
+        if (!isSnapshot && isSnapshotUrl) {
             String[] messages = new String[] {
                     "possible mismatch between release version and snapshot Url",
                     "Your Version " + project.getVersion() + " appears to be in conflict with the url " + repo.getUrl()
@@ -391,8 +375,7 @@ public class ConfigurationValidator extends AbstractValidator {
 
             logWarnFinish(log);
         }
-        if (!isSnapshot)
-        {
+        if (!isSnapshot) {
             String[] messages = new String[] {
                     "Please Note:",
                     "*** This is a warning to consider if your build fails for unknown reason(s):***",
@@ -416,4 +399,58 @@ public class ConfigurationValidator extends AbstractValidator {
     }
 
 
+    public static void validadeAndFixConfigurationNatureOfProject(File projectDirectory) throws MojoFailureException {
+        try {
+
+            ProjectDescription project = EclipseProjectUtils.unmarshallEclipseProjectFile(projectDirectory);
+            List<String> natureList = project.getNatures().getNature();
+
+            if ((natureList.contains(NatureType.APPLICATION.getFullName()) ||
+                    natureList.contains(NatureType.BARFILES.getFullName()) ||
+                    natureList.contains(NatureType.LIBRARY.getFullName()) ||
+                    natureList.contains(NatureType.SHAREDLIBRARY.getFullName())) &&
+                    (natureList.contains(NatureType.JAVA.getFullName()))) {
+
+                project.getNatures().getNature().remove(NatureType.JAVA.getFullName());
+
+                {
+                    Integer index = getIndexBuildCommand(project, BuildCommandType.ECLIPSE_JAVA_BUILDER.getFullName());
+                    if (index != null) {
+                        project.getBuildSpec()
+                                .getBuildCommand()
+                                .remove(index.intValue());
+                    }
+                }
+
+                {
+                    Integer index = getIndexBuildCommand(project, BuildCommandType.IBM_JAVA_BUILDER.getFullName());
+                    if (index != null) {
+                        project.getBuildSpec()
+                                .getBuildCommand()
+                                .remove(index.intValue());
+                    }
+                }
+
+                EclipseProjectUtils.marshallEclipseProjectFile(project, projectDirectory);
+            }
+
+        } catch (JAXBException e) {
+            throw (new MojoFailureException(
+                    "Error parsing .project file in: " + projectDirectory.getPath(), e));
+        }
+    }
+
+    /**
+     * @param fullName
+     * @return
+     */
+    private static Integer getIndexBuildCommand(ProjectDescription project, String fullName) {
+        for (int index = 0; index <= project.getBuildSpec().getBuildCommand().size(); index++) {
+            String command = project.getBuildSpec().getBuildCommand().get(index).getName();
+            if (command.equalsIgnoreCase(fullName)) {
+                return index;
+            }
+        }
+        return null;
+    }
 }

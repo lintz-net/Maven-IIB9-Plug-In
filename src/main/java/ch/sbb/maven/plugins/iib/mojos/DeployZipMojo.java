@@ -34,9 +34,9 @@ import ch.sbb.maven.plugins.iib.utils.ConfigurationValidator;
 
 /**
  * This Mojo deploys zipped up IIB9 projects to the designated maven distribution repository.
- *
  * 
- *
+ * 
+ * 
  * @author Brett (user_vorname user_nachname)
  * @version $Id: $
  * @since pom_version, 2016
@@ -67,6 +67,7 @@ public class DeployZipMojo extends AbstractMojo {
     protected String zipFilePath;
 
 
+    @Override
     public void execute() throws MojoFailureException, MojoExecutionException
     {
         try
@@ -114,12 +115,11 @@ public class DeployZipMojo extends AbstractMojo {
                     element(name("artifactId"), artifactId),
                     element(name("groupId"), groupId),
                     element(name("version"), version),
-                    pomElement
-                    );
+                    element(name("packaging"), "zip"));
+
             ExecutionEnvironment executionEnvironment = executionEnvironment(project, session, buildPluginManager);
 
             executeMojo(deployFilePlugin, goal, pluginConfiguration, executionEnvironment);
-
 
             // / delete the zip file as it is a temporary resource
             file.delete();
@@ -130,7 +130,5 @@ public class DeployZipMojo extends AbstractMojo {
         {
             throw new MojoFailureException(e.toString());
         }
-
     }
-
 }
